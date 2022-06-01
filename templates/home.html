@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!--images slides-->
+<!-- Slideshow container -->
+<div style="margin:10px;">
+<div id="carouselExampleSlidesOnly" class="carousel slide" style="height:300;" data-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active" style="height:300;">
+        <div class="row">
+            <div class="col-md-6" >
+            <img style="height:300;" class="d-block w-100" src="{% static 'img/slide1.jpg' %}" alt="First slide">
+        </div>
+        <div class="col-md-6" style="height:300;">
+            <img style="height:300;" class="d-block w-100" src="{% static 'img/slide2.jpg' %}" alt="First slide">
+        </div>
+        </div>
+    </div>
+    <div class="carousel-item" style="height:300;">
+      <img  class="d-block w-100" src="{% static 'img/slide2.jpg' %}" alt="Second slide">
+    </div>
+    <div class="carousel-item" style="height:300;">
+      <img class="d-block w-100" src="{% static 'img/slide1.jpg' %}" alt="Third slide">
+    </div>
+  </div>
+</div>
+<!-- The dots/circles -->
+<div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span>
+  <span class="dot" onclick="currentSlide(2)"></span>
+  <span class="dot" onclick="currentSlide(3)"></span>
+</div>
+</div>
+    <!-- content -->
+<div class="row">
+    <div class="col-md-2" style="padding:20px 0 0 20px; ">
+        <div class="card" style="padding:10px;">
+             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="myfunction('tab2','tab3','tab4','tab1')">Home</a>
+              <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false" onclick="myfunction('tab1','tab3','tab4','tab2')">Messages</a>
+              <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false" onclick="myfunction('tab1','tab2','tab4','tab3')">Orders</a>
+              <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false" onclick="myfunction('tab1','tab2','tab3','tab4')">Recent</a>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="col-md-10">
+
+<!--        tabs-->
+        <div id="tab1" class="card" style="margin-right:10px;">
+
+            <!--nav category-->
+            <div>
+             <ul class="nav nav-tabs" style="padding: 10px 0 0 10px;">
+          <li class="nav-item">
+            <a class="nav-link {% if ct is None %}active{% endif %}" href="/">Offers</a>
+          </li>
+            {% for i in ctg %}
+          <li class="nav-item">
+            <a class="nav-link {% if ct == i.slug %} active {% endif %}" href="{% url 'catg' i.slug %}">{{i.name}}</a>
+          </li>
+            {% endfor %}
+        </ul><br>
+        </div>
+
+            <!--cards-->
+
+            <div class="row" style="padding:0 10px 10px 15px;">
+
+                {% for i in obj %}
+                {% if i.avilability == True %}
+               <div class="card" style="width: 15rem; margin:10px;">
+                   <div class="card-img-top" style=" width:100%; height:250px;">
+                       <img style="width:100%; height:100%; object-fit:cover;" src="{{i.img.url}}" alt="Card image cap">
+                   </div>
+                   <div class="card-body">
+                      <h6 class="card-title">{{i.name}}</h6>
+                      <p class="">{{i.desc|truncatewords:3}}</p>
+                      {% if i.offers %}
+                      <div class="row">
+                          <h6 style="color:red"><del>&#8377;{{i.price}}</del></h6>&nbsp;
+                          <h6 style="color:green">&#8377;{{i.offerprice}}</h6>
+                      </div>
+                      {% else %}
+                      <div class="row">
+                          <h6 style="color:green">&#8377;{{i.price}}</h6>
+                      </div>
+                      {% endif %}
+
+                   </div>
+                   <div class="btn-group" role="group" aria-label="Basic example">
+                          <a type="button" class="btn btn-warning" style="font-size:13px;">Buy now</a>
+                          <a type="button" href="{% url 'add' i.id %}" class="btn btn-primary" style="font-size:13px;">Add to cart</a>
+                          <a type="button" href="{% url 'details' i.id %}" class="btn btn-success" style="font-size:13px;">Details</a>
+                   </div>
+               </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+<!--        tab2-->
+
+{% if user.is_authenticated %}
+        <div id="tab2" class="row" style="outline:1px solid rgb(200,200,200); border-radius:3px; margin:20px 10px 10px 10px;">
+            <div class="col-md-9">
+                <div id="over_flow" style="overflow-y:scroll; height:500px;">
+                 {% for i in msg %}
+                    {% if i.trikmsg == False %}
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div id="msgid1" class="col-md-8 row">
+                            <div class="col-md-8">
+                                <p style="margin:0;">{{i.msgtxt}}</p>
+
+                                <p style="color:rgb(80,80,80); margin:0; font-size:12px;" >{{i.time}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <img style="border-radius:50%; width:60; height:60;" src="{{user.img.url}}" alt="image">
+                        </div>
+                    </div>
+                    <br>
+                    {% else %}
+                    <div class="row" >
+                        <img style="border-radius:50%; width:60; height:60; margin:0 10px 0 20px;" src="{% static 'img/trik.png' %}" alt="image">
+                        <div class="col-md-8" style="border:1px solid rgb(200,200,200); border-left-width:thick; border-left-color:rgb(30,200,250); border-radius:0 18px 18px 18px; background-color:rgb(200,240,255);">
+
+                            <p style="margin:0;">{{i.msgtxt}}</p>
+                            <p style="color:rgb(80,80,80); margin:0; font-size:12px;">{{i.time}}</p>
+
+                        </div>
+                        <div class=""></div>
+                    </div>
+                    <br>
+                    {% endif %}
+
+                    {% endfor %}
+                </div>
+
+            </div>
+            <div class="col-md-3">
+                <div style="margin:10px;">
+                    <a class="btn btn-danger" style="width:100%;" href="{% url 'deletemsg' %}">Delete all messages</a>
+                </div>
+                <form action="{% url 'mssg' %}" style="margin-top:20px" method="post">
+                    {% csrf_token %}
+                    <textarea id="text1" style="width:250px; height:80px; text-align:center;" class="form-control" name="message" placeholder="Write here"></textarea><br>
+                    <input style="width:250px; margin:5px 0 0 0;" class="btn btn-outline-warning" type="submit" value="send">
+                </form>
+            </div>
+
+        </div>
+        {% else %}
+            <div id="tab2" class="card tab_block" style="outline:1px solid rgb(200,200,200); border-radius:3px; margin:20px 10px 10px 10px; padding:20px;">
+                <h5>User unidentified!!! Login to your account </h5>
+            </div>
+        {% endif %}
+
+<!--        tab3-->
+        {% if user.is_authenticated %}
+
+        <div id="tab3" class="card" style=" height:100%; margin:20px 10px 10px 10px;">
+            {% for i in ord %}
+            <div class="shadow card" style="padding:15px; margin:10px;">
+                <div class="row">
+                    <div class="col-md-6">
+                       <img style="width:50%; height:100%;" src="{{i.prodid.img.url}}" alt="Card image cap">
+                    </div>
+                    <div class="col-md-6">
+                        <div><center><h5 class="card-title">{{i.prodid.name}}</h5></center></div>
+                        <div>
+                            <p class="card-text">{{i.prodid.desc}}</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                 {% if i.prodid.offers %}
+                                <h6 style="color:red"><del>Price&nbsp; &#8377;{{i.prodid.price}}</del></h6>
+                                <h6 style="color:green">OfferPrice&nbsp; &#8377;{{i.prodid.offerprice}}</h6>
+                                {% else %}
+                                <h6 style="color:green">Price&nbsp; &#8377;{{i.prodid.price}}</h6><br>
+                                {% endif %}
+                                <h6>Quantity={{i.quan}}</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Bought Price={{i.boughtprice}}</h6>
+                                <a class="btn btn-success" style="width:140px; margin:5px;">Pending</a><br>
+                                <a href="{% url 'add' i.prodid.id %}" class="btn btn-warning" style="width:140px; margin:5px;">Add to cart</a><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           </div>
+            {% endfor %}
+        </div>
+          {% else %}
+        <div id="tab3" class="card tab_block" >
+            <h5>User unidentified!!! Login to your account </h5>
+
+        </div>
+        {% endif %}
+
+<!--        tab4-->
+        {% if user.is_authenticated %}
+
+        <div id="tab4" class="card" style=" height:100%; margin:20px 10px 10px 10px;">
+            {% for i in ord_recent %}
+            <a href="{% url 'recent_ord' i.date %}">
+                <div class="card " style="width:98%; padding:10px; margin:10px;">
+                    <h6>Items Bought in {{i.date}}</h6>
+
+                    <div class="row" style="padding:10px;">
+                        {% for j in i.items %}
+                            <img style="width:100; height:100;" src="{{j.prodid.img.url}}">
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+         {% else %}
+        <div id="tab4" class="card tab_block" >
+            <h5 >User unidentified!!! Login to your account </h5>
+
+        </div>
+        {% endif %}
+<!--         tabs ended-->
+
+    </div>
+</div>
+<script src="{% static 'js/main1.js' %}"></script>
+{% endblock %}

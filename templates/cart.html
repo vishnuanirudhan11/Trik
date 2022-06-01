@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="card" style="margin:20px 0 0 0;">
+<!--        nav-bar-->
+         <div>
+             <ul class="nav nav-tabs" style="padding: 10px 0 0 10px;">
+          <li class="nav-item">
+            <a id="item1" class="nav-link active" style="cursor:pointer;" onclick="myfunction('items','buy_out','item1','item2')">Items</a>
+          </li>
+          <li class="nav-item">
+            <a id="item2" class="nav-link " style="cursor:pointer;" onclick="myfunction('buy_out','items','item2','item1')">Buy Out</a>
+          </li>
+
+        </ul><br>
+        </div>
+
+
+<!--        cards-->
+        <div id="items">
+            {% for i in ct %}
+            <div class="card" style="margin:10px;">
+            <div class="row">
+                <div class="col-md-2">
+                    <img style="width:120px; height:120px; " src="{{i.productid.img.url}}" alt="">
+                </div>
+                <div class="col-md-10 row">
+                    <div class="col-md-6">
+                        <h6>{{i.productid.name}}</h6>
+                        <p>{{i.productid.desc}}</p>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+                        <div style="margin:10px 0 0 0"><a class="badge badge-danger" href="{% url 'delete' i.productid.id %}">Delete</a></div>
+                        {% if i.productid.offers %}
+                            <p style="color:red; margin:0;"><del>Price&nbsp; &#8377;{{i.productid.price}}</del></p>
+                            <p style="color:green; margin:0;">OfferPrice&nbsp; &#8377;{{i.productid.offerprice}}</p>
+                        {% else %}
+                            <p style="color:green">Price&nbsp; &#8377;{{i.productid.price}}</p>
+                        {% endif %}
+                        <div class="float-right row" style="background-color:rgb(230,230,230); border-radius:10px; margin:3px;">
+
+                                <a style="font-size:25px; text-decoration:none;" href="{% url 'add' i.productid.id %}" ><b>&#43; &nbsp;</b></a>
+                                <h5 style="margin-top:8px;">{{i.quantity}}</h5>
+                                <a style="font-size:25px; text-decoration:none;" href="{% url 'minus' i.productid.id %}" ><b>&nbsp; &#8722;</b></a>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="buy_out" class="row">
+            <div class="col-md-6">
+                {% for i in ct %}
+            <div class="card" style="margin:10px 0 10px 10px;">
+            <div class="row">
+                <div class="col-md-2">
+                    <img style="width:50px; height:50px; " src="{{i.productid.img.url}}" alt="">
+                </div>
+                <div class="col-md-10 row">
+                    <div class="col-md-6">
+                        <h6>{{i.productid.name}}</h6>
+
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+                        {% if i.productid.offers %}
+                            <p style="color:red; margin:0;"><del>Price&nbsp; &#8377;{{i.productid.price}}</del></p>
+                            <p style="color:green; margin:0;">OfferPrice&nbsp; &#8377;{{i.productid.offerprice}}</p>
+                        {% else %}
+                            <p style="color:green">Price&nbsp; &#8377;{{i.productid.price}}</p>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+                </div>
+            {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <div class="card" style="margin:10px 10px 10px  0; padding:10px;">
+                    <h6>Total items ={{num}}</h6>
+                    <h6>Total Price = &#8377;{{tot}}</h6>
+                    <h6>You have saved = &#8377;{{save}}</h6>
+                    <p style="color:rgb(160,160,160)"><img style="width:18px; height:18px;" src="{% static 'img/exc_mark.png' %}" alt="image"> Note:Cash On Delivery Only!</p>
+                    {% if user.is_authenticated %}
+                    <a style="position:relative; bottom:0; right:0; margin:10px;" href="{% url 'buyout' %}" class="btn btn-warning">Buy Out</a><br>
+                    <div >
+                    {% else %}
+                        <div class="">
+                            <p style="margin:0;"> You did't logged in, You have to give your phone number!</p>
+                            <p >We will contact you shortly</p>
+                        </div>
+                    <form action="{% url 'buyout' %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" class="form-control" name="phone" placeholder="Mobile number"><br>
+                        <input type="submit" class="btn btn-warning" value="Buy Out">
+                    </form>
+                    {% endif %}
+                       </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+ <script src="{% static 'js/cart1.js' %}"></script>
+{% endblock %}

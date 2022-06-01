@@ -1,0 +1,46 @@
+{% load static %}
+
+    <div style="overflow-y:scroll; height:350px; background-color:rgb(225,225,225); padding:0 10px 0 10px; border-radius:30px; margin:10px;">
+     {% for i in msg %}
+        {% if i.trikmsg == False %}
+        <div class="cstm_row" >
+
+
+                <img style="border-radius:50%; width:60; height:60;" src="{{id.img.url}}" alt="image">
+
+            <div id="msgid" class="col-md-8">
+
+                    <p>{{i.msgtxt}}</p>
+
+               <div style="text-align:right;">
+                    <p class="card-text" style="color:rgb(150,150,150); text">{{i.time}}</p>
+               </div>
+            </div>
+            <div class="col-md-1"></div>
+
+        </div>
+        <br>
+        {% else %}
+        <div class="cstm_row">
+            <div class="col-ms-1"></div>
+            <div class="col-md-8 " style="border:1px solid rgb(200,200,200); border-right-width:thick; border-right-color:rgb(30,200,250); border-radius:18px 0 18px 18px; background-color:rgb(200,240,255);">
+                    <p>{{i.msgtxt}}</p>
+                    <p class="card-text" style="color:rgb(150,150,150">{{i.time}}</p>
+            </div>
+            <div class="col-sm-2"><img style="border-radius:50%; width:60; height:60;" src="{% static 'img/trik.png' %}" alt="image"></div>
+
+        </div>
+        <br>
+        {% endif %}
+
+        {% endfor %}
+    </div>
+    <div style="width:100%;">
+        <form action="{% url 'msgtrik' id.id %}" method="post">
+            {% csrf_token %}
+            <input style="width:100%; height:80px; text-align:center;" type="text" class="form-control" name="msgtxt" placeholder="Write here"><br>
+            <input style="width:100%; margin:5px 0 0 0;" class="btn btn-outline-warning" type="submit" value="send">
+        </form>
+    </div>
+
+

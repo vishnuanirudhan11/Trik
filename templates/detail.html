@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container"><br>
+
+    <div class="shadow card" style="padding:15px">
+        <div class="row">
+            <div class="col-md-5">
+               <img style="width:105%; height:95%;" src="{{obj.img.url}}" alt="Card image cap">
+            </div>
+
+            <div class="col-md-7">
+                <div><center><h5 class="card-title">{{obj.name}}</h5></center></div>
+                <div class="row">
+                    <div class="col-md-7">
+                        {% if user.is_authenticated %}
+                        <div style="overflow-y:scroll; height:350px;">
+                            {% for i in cmt %}
+                            <div class="row">
+                                <div class="col-md-2" >
+                                    <img style="border-radius:50%; width:50; height:50;" src="{{i.user.img.url}}" alt="">
+                                </div>
+                                <div class="col-md-8 " style="border:1px solid rgb(200,200,200); margin:0 10px 0 10px; border-left-width:thick; border-left-color:rgb(30,200,250); border-radius:15px 15px 15px 0; ">
+
+                                        <p style="margin:0;">{{i.cmt}}</p>
+
+                                    <div  style="text-align:right;">
+                                        <p class="card-text" style="color:rgb(80,80,80); margin:0; font-size:12px;">{{i.date}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div><br>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-5" style="text-align:right; ">
+                        <p class="card-text">{{obj.desc}}</p>
+                        {% if obj.offers %}
+                        <h6 style="color:red"><del>Price&nbsp; &#8377;{{obj.price}}</del></h6>
+                        <h6 style="color:green">OfferPrice&nbsp; &#8377;{{obj.offerprice}}</h6>
+                        {% else %}
+                        <h6 style="color:green">Price&nbsp; &#8377;{{obj.price}}</h6>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        <a href="" class="btn btn-warning" style="width:140px; margin:5px;">buy now</a><br>
+                        {% else %}
+                        <a href="#" class="btn btn-warning" style="width:140px; margin:5px;">buy now</a><br>
+                        {% endif %}
+                        <a href="{% url 'add' obj.id %}" class="btn btn-success" style="width:140px; margin:5px;">Add to cart</a><br>
+                        <a href="/" class="btn btn-secondary" style="width:140px; margin:5px;">back to home</a>
+                    </div>
+                </div>
+                {% if user.is_authenticated %}
+                <form class="row" method="post" action="{% url 'comment' obj.id %}" style="margin:10px;">
+                    {% csrf_token %}
+                    <div class="col-md-10"><input type="text" class="form-control" placeholder="comment here" name="cmmt"></div>
+                    <div class="col-md-2"><input type="submit" class="btn btn-outline-warning" value="post"></div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+   </div>
+</div>
+{% endblock %}

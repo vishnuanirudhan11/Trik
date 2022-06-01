@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script src="{% static 'js/charts.js' %}"></script>
+
+
+<div class="row">
+    <div class="col-md-2" style="padding:20px 0 0 20px; ">
+        <div class="card" style="padding:10px;">
+             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="myfunction('tab2','tab3','tab4','tab1')">Home</a>
+              <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false" onclick="myfunction('tab1','tab3','tab4','tab2')">Task</a>
+              <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false" onclick="myfunction('tab1','tab2','tab4','tab3')">Messages</a>
+              <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false" onclick="myfunction('tab1','tab2','tab3','tab4')">About and T&C</a>
+            </div>
+        </div>
+
+    </div>
+    <div id="tab1" class="col-md-10" style="padding:20px;">
+        <div class="card chart_container" style=" margin:0 10px 20px 10px; padding:10px;">
+            <center class="cstm_row">
+                <h5>Last month performance</h5>
+<!--                dropdown-->
+                <!-- Example single danger button -->
+                <div class="btn-group">
+                  <button id="btn1" type="button" class="badge badge-danger dropdown-toggle " style="margin-left:10px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{year}}
+                  </button>
+                  <div class="dropdown-menu">
+                      {% for i in list_year %}
+                      <a class="dropdown-item" onclick="chartfun({{i}},null)">{{i}}</a>
+                      {% endfor %}
+                  </div>
+                </div>
+
+                <div class="btn-group">
+                  <button id="btn2" type="button" class="badge badge-danger dropdown-toggle" style="margin-left:10px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      jan-dec
+                  </button>
+                  <div class="dropdown-menu">
+                    {% for i in months %}
+                    <a class="dropdown-item" onclick="chartfun(null,{{i.num}})" >{{i.month}}</a>
+                    {% endfor %}
+                  </div>
+                </div>
+
+            </center>
+        </div>
+        <div id="load_html" class="cstm_row">
+        </div>
+    </div>
+
+    <div id="tab2" class="col-md-10 " style=" padding:10px;">
+
+        <div class="card" style="margin:10px 20px 0 0;">
+<!--        nav-bar-->
+            <div>
+                 <ul class="nav nav-tabs" style="padding: 10px 0 0 10px;">
+                      <li class="nav-item">
+                        <a id="nav1" class="nav-link active" style="cursor:pointer;" onclick="detail_nav('det1','det2','nav1','nav2')">Pending</a>
+                      </li>
+                      <li class="nav-item">
+                        <a id="nav2" class="nav-link " style="cursor:pointer;" onclick="detail_nav('det2','det1','nav2','nav1')">Recent</a>
+                      </li>
+
+                 </ul><br>
+            </div>
+                  <div id="det1" class="cstm_row" style=" margin:0 10px 10px 0;">
+                        <div class="cstm_col col-md-4" style="padding:10px; margin:10px;">
+                            <script> var i = 1;</script>
+                            {% for i in act_ord %}
+                            <div class="card" style="padding:5px; cursor:pointer;">
+                                {% if i.userid != 0 %}
+
+                                <a class="cstm_row" style="padding:5px;" onclick="clietDetail({{i.cartid.id}})">
+                                    <img style="border-radius:50%; margin-right:10px; width:50; height:50;" src="{{i.userid.img.url}}" alt="image">
+                                    <div><h6 style="margin:0;" >{{i.userid.first_name}}&nbsp;{{i.userid.last_name}}</h6><p>email:&nbsp;{{i.userid.email}}</p></div>
+                                </a>
+                                {% else %}
+                                <a class="cstm_row" style="padding:5px;" onclick="clietDetail({{i.cartid.id}})">
+                                    <img style="border-radius:50%; margin-right:10px; width:50; height:50;" src="{% static 'img/person.png' %}" alt="image">
+                                    <div class="cstm_col">
+                                        <h6 style="margin:0;">Gust&nbsp;Person</h6>
+                                        <p style="margin:0;">id={{i.cartid.session}}</p>
+                                    </div>
+                                </a>
+                                {% endif %}
+                            </div>
+
+                            <script>if (i == 1){
+                                    clietDetail({{i.cartid.id}})
+                                    }i=2;
+
+                                </script>
+                            {% endfor %}
+
+                        </div>
+                        <div class="cstm_col col-md-8" >
+                            <div id="detail" style="width:95%;">
+
+                            </div>
+                        </div>
+                  </div>
+                  <div id="det2" class="row">
+                        <div class="col-md-5">
+                        {% for i in ord_users %}
+                            <div class="card" style="padding:5px; cursor:pointer; margin:5px;">
+
+
+                                <a class="cstm_row" style="padding:5px;" onclick="post_deliver({{i.id}})">
+                                    <img style="border-radius:50%; margin-right:10px; width:50; height:50;" src="{{i.img.url}}" alt="image">
+                                    <div><h6 style="margin:0;" >{{i.first_name}}&nbsp;{{i.last_name}}</h6><p>email:&nbsp; {{i.email}}</p></div>
+                                </a>
+
+                            </div>
+
+                            {% endfor %}
+                        </div>
+                        <div id="post_deliver" class="col-md-7">
+
+                        </div>
+                  </div>
+        </div>
+    </div>
+
+
+    <div id="tab3" class="col-md-10">
+            <script>var j=1; </script>
+
+        <div class="card" style="margin:20px 20px 0 0;">
+<!--        nav-bar-->
+             <div>
+                 <ul class="nav nav-tabs" style="padding: 10px 0 0 10px;">
+              <li class="nav-item">
+                <a id="item1" class="nav-link active" style="cursor:pointer;" onclick="msgfun('msg1','msg2','item1','item2')">Unseen</a>
+              </li>
+              <li class="nav-item">
+                <a id="item2" class="nav-link " style="cursor:pointer;" onclick="msgfun('msg2','msg1','item2','item1')">seen</a>
+              </li>
+
+            </ul><br>
+            </div>
+
+
+            <div id="msg1">
+                    <div class="row " style="width:100%;">
+                     <div class="col-md-5" style="padding:10px;">
+                        {% for i in users %}
+                         <div class="card" style="margin:10px; padding:10px;">
+                            <a class="row" style=" cursor:pointer;" onclick="msg_detail({{i.userid.id}},)">
+                                <div class="col-md-3">
+                                    <img style="border-radius:50%; width:60; height:60; " src="{{i.userid.img.url}}" alt="image">
+                                </div>
+                                <div class="col-md-9">
+                                    <h6>{{i.userid.first_name}}&nbsp;{{i.userid.last_name}}</h6>
+                                    <p>email:&nbsp;{{i.userid.email}}</p>
+                                </div>
+                                <div class="col-md-3"><a class="badge btn-primary" onclick="msg_action({{i.userid.id}},'true')" >Seen</a></div>
+
+                            </a>
+                         </div>
+                         <script> if(j == 1){ j=2;
+                                  msg_detail({{i.userid.id}},)  }
+
+                         </script>
+                        {% endfor %}
+                    </div>
+                        <div class="col-md-7" style="width:90%;" >
+                            <div id="messages">
+
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+
+            <div id="msg2">
+                <div class="row " style="width:100%;">
+                    <div class="col-md-5" style="padding:10px;">
+                            {% for i in post_user_msg %}
+                             <div class="card" style="margin:10px; padding:10px;">
+                                <a class="row" style=" cursor:pointer;" onclick="msg_detail({{i.userid.id}},)">
+                                    <div class="col-md-3">
+                                        <img style="border-radius:50%; width:60; height:60; " src="{{i.img.url}}" alt="image">
+                                    </div>
+                                    <div class="col-md-9 msgid2" >
+                                        <h6>{{i.first_name}}&nbsp;{{i.last_name}}</h6>
+                                        <p>email:&nbsp;{{i.email}}</p>
+                                    </div>
+                                </a>
+                             </div>
+
+                            {% endfor %}
+                    </div>
+                    <div class="col-md-7" style="width:90%;" >
+                        <div id="post_msg">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab4" class="col-md-10"></div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% load static %}
+{% if user.first_name != None %}
+    <div class="card cstm_row" style="padding:10px; margin:10px 10px 10px 0 ;">
+       <div class="col-md-1"><img style="border-radius:50%; width:60; height:60;" src="{{user.img.url}}" alt="image"></div>
+       <div class="col-md-7">
+           <div class="col-md-6">
+                <h6>{{user.first_name}} &nbsp; {{user.last_name}}</h6>
+               <p>{{user.phone}}</p>
+           </div>
+           {% if not post %}
+            <div class="col-md-6">
+                <a class="btn btn-danger" onclick="ord_process({{id}},'cancel')">Cancel</a>
+                <a class="btn btn-success" onclick="ord_process({{id}},'done')">Done</a>
+            </div>
+
+           {% endif %}
+       </div>
+        {% if not post %}
+        <div class="col-md-4" style="text-align:right;"><p style="margin:0; color:green;">Total items = {{money.num}}</p><p style="margin:0; color:red;"><del>MRP = {{money.realtot}}</del></p>
+            <p style="margin:0; color:green;">saved = {{money.savedmoney}}</p><h6 style="margin:0; color:blue;">Price = {{money.total}}</h6></div>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="card cstm_row" style="padding:10px; margin:10px 10px 10px 0;">
+       <div class="col-md-1"><img style="border-radius:50%; width:60; height:60;" src="{% static 'img/person.png' %}" alt="image"></div>
+       <div class="col-md-7">
+           <div class="col-md-6">
+               <h6>Unkown user</h6>
+               <h6>{{phone}}</h6>
+           </div>
+            <div class="col-md-6">
+                <a class="btn btn-danger" onclick="ord_process({{user.id}},'cancel')">Cancel</a>
+                <a class="btn btn-success" onclick="ord_process({{user.id}},'done')">Done</a>
+            </div>
+       </div>
+        <div class="col-md-4" style="text-align:right;"><p style="margin:0; color:green;">Total items = {{money.num}}</p><p style="margin:0; color:red;"><del>MRP = {{money.realtot}}</del></p>
+            <p style="margin:0; color:green;">saved = {{money.savedmoney}}</p><h6 style="margin:0; color:blue;">Price = {{money.total}}</h6></div>
+    </div>
+
+{% endif %}
+
+{% for i in ord %}
+<div class="card" style="margin:10px 10px 10px 0;">
+   <div class="cstm_row">
+        <div class="col-md-4"><img style="width:200px; height:200px;" src="{{i.prodid.img.url}}" alt=""></div>
+        <div class="col-md-8" style="text-align:right; padding:10px;">
+
+                <h6>{{i.prodid.name}}</h6>
+                <p>{{i.prodid.desc}}</p>
+                {% if i.prodid.offers %}
+            <h6 style="color:red; margin:0;"><del>&#8377;{{i.prodid.price}}</del></h6>
+            <h6 style="color:green; margin:0;">&#8377;{{i.prodid.offerprice}}</h6>
+                      {% else %}
+            <h6 style="color:green; margin:0;">&#8377;{{i.prodid.price}}</h6>
+                      {% endif %}
+                <p>quantity={{i.quan}}</p>
+            <p>{% if i.cancel %}Canceled on {{i.done_date}}{% endif %}{% if i.curstats %}Delivered on {{i.done_date}} {% endif %}</p>
+
+        </div>
+   </div>
+
+</div>
+{% endfor %}

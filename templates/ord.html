@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="margin:10px; padding:10px;">
+{% for i in items %}
+
+    <div class="row" style="margin:10px; padding:10px; border:1px solid black; border-radius:5px;">
+        <div style="margin:15px;">
+            <img style="width:200; height:200;" src="{{i.prodid.img.url}}">
+        </div>
+        <div>
+            <h6>{{i.prodid.name}}</h6>
+             {% if i.prodid.offers %}
+                <h6 style="color:red"><del>Price&nbsp; &#8377;{{i.prodid.price}}</del></h6>
+                <h6 style="color:green">OfferPrice&nbsp; &#8377;{{i.prodid.offerprice}}</h6>
+                {% else %}
+                <h6 style="color:green">Price&nbsp; &#8377;{{i.prodid.price}}</h6><br>
+                {% endif %}
+                <h6>Quantity={{i.quan}}</h6>
+        </div>
+        <div>
+            {{i.prodid.desc}}
+        </div>
+    </div>
+
+
+{% endfor %}
+</div>
+{% endblock %}

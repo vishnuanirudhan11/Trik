@@ -1,0 +1,46 @@
+
+#tab2{
+   border-radius:3px;
+   outline:1px solid rgb(200,200,200);
+   margin:20px 10px 10px 10px;
+   padding:20px;
+}
+
+#msgid{
+    margin:0 10px 0 10px;
+    border-left-width:thick;
+    border-left-color:rgb(30,200,250);
+    border-radius:3px;
+    border:1px solid rgb(200,200,200);
+}
+.imguser{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    outline:3px solid white;
+    margin:0;
+}
+.home_btn{
+    color:white;
+    border:1px solid white;
+    border-radius:5px;
+    margin-left:80%;
+}
+.adminhome{
+    margin:10px;
+    padding:10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+
+}
+.cstm_row{
+    display:flex;
+    flex-direction:row;
+    flex:1
+}
+.cstm_col{
+    display:flex;
+    display:flex;
+    flex:1;
+}
+
+
